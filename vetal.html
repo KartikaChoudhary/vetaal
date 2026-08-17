@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VETAAL वेताल — The Riddle Does Not Sleep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Sans+Devanagari:wght@300;500;700&family=Mulish:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="auth-and-quiz.css">
+<style>
+:root{
+  --void:#100b06;
+  --void2:#1a130a;
+  --gold:#b8903a;
+  --gold-bright:#e8c468;
+  --gold-dim:#6b532488;
+  --ruby:#6e0f1c;
+  --ruby-bright:#a3182b;
+  --emerald:#0d3a34;
+  --ivory:#ede3cb;
+  --ivory-dim:#a89a7c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);
+  color:var(--ivory);
+  font-family:'Mulish',sans-serif;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--ruby);color:var(--ivory);}
+
+.grain{position:fixed;inset:0;z-index:998;pointer-events:none;opacity:0.045;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+.vignette{position:fixed;inset:0;z-index:997;pointer-events:none;background:radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.7) 100%);}
+
+/* floating gold dust particles */
+.dust-field{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden;}
+.dust{position:absolute;border-radius:50%;background:var(--gold-bright);opacity:0;
+  box-shadow:0 0 6px var(--gold-bright);animation:drift linear infinite;}
+@keyframes drift{
+  0%{transform:translateX(0);opacity:0;}
+  10%{opacity:0.7;}
+  90%{opacity:0.5;}
+  100%{transform:translateY(-100vh) translateX(30px);opacity:0;}
+}
+
+/* ===== DIYA TRAIL (signature element) ===== */
+.diya-trail{position:fixed;left:34px;top:0;bottom:0;width:20px;z-index:100;}
+.diya-track-bg{position:absolute;top:8%;bottom:8%;left:9px;width:1px;background:rgba(232,227,203,0.1);}
+.diyas{position:absolute;top:8%;bottom:8%;left:0;width:20px;}
+.diya{position:absolute;left:0;width:20px;height:20px;transform:translateY(-50%);}
+.diya-base{width:18px;height:7px;border-radius:50%;background:linear-gradient(180deg,var(--gold),#5a441f);
+  position:absolute;bottom:0;left:1px;box-shadow:0 0 4px rgba(0,0,0,0.6);}
+.diya-flame{position:absolute;bottom:6px;left:7px;width:6px;height:10px;
+  background:radial-gradient(ellipse at 50% 80%, #fff6d8 0%, var(--gold-bright) 40%, var(--ruby-bright) 90%, transparent 100%);
+  border-radius:50% 50% 50% 50% / 65% 65% 35% 35%;
+  opacity:0.15;filter:blur(0.3px);
+  transform-origin:bottom center;
+  transition:opacity 0.6s ease;
+}
+.diya.lit .diya-flame{opacity:1;animation:flicker 2.4s ease-in-out infinite;}
+.diya.lit .diya-flame::after{content:'';position:absolute;inset:-6px;background:radial-gradient(circle,rgba(232,196,104,0.35),transparent 70%);border-radius:50%;}
+@keyframes flicker{
+  0%,100%{transform:scaleY(1) scaleX(1) rotate(0deg);}
+  20%{transform:scaleY(1.08) scaleX(0.94) rotate(-2deg);}
+  45%{transform:scaleY(0.92) scaleX(1.05) rotate(2deg);}
+  70%{transform:scaleY(1.05) scaleX(0.96) rotate(-1deg);}
+}
+.diya-label{position:absolute;left:28px;top:-6px;font-family:'JetBrains Mono',monospace;font-size:9px;
+  letter-spacing:0.08em;color:var(--ivory-dim);white-space:nowrap;opacity:0;transition:opacity 0.4s ease;text-transform:uppercase;}
+.diya.lit + .diya-label{opacity:0.8;}
+@media (max-width:860px){.diya-trail{display:none;}}
+
+.section{position:relative;padding:150px 10vw;min-height:100vh;display:flex;flex-direction:column;justify-content:center;}
+@media (max-width:860px){.section{padding:110px 24px;}}
+
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--ruby-bright);display:flex;align-items:center;gap:10px;margin-bottom:26px;}
+.eyebrow::before{content:'';width:24px;height:1px;background:var(--ruby-bright);}
+.eyebrow .dev{font-family:'Noto Sans Devanagari',serif;color:var(--gold-bright);margin-left:6px;}
+
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 1s cubic-bezier(.16,.84,.44,1),transform 1s cubic-bezier(.16,.84,.44,1);}
+.reveal.in{opacity:1;transform:translateY(0);}
+.reveal.d1{transition-delay:0.12s;}
+.reveal.d2{transition-delay:0.24s;}
+.reveal.d3{transition-delay:0.36s;}
+.reveal.d4{transition-delay:0.48s;}
+
+/* ===== HERO ===== */
+.hero{min-height:100vh;justify-content:center;position:relative;z-index:2;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 15%, rgba(184,144,58,0.16), transparent 65%),
+    radial-gradient(ellipse 60% 50% at 80% 90%, rgba(110,15,28,0.18), transparent 60%),
+    linear-gradient(180deg,var(--void) 0%,var(--void2) 100%);
+  overflow:hidden;
+}
+.filigree{position:absolute;inset:0;pointer-events:none;opacity:0.5;}
+.filigree svg{position:absolute;}
+.crown-motif{position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:120px;opacity:0.9;
+  animation:jewelGlow 4s ease-in-out infinite;}
+@keyframes jewelGlow{0%,100%{filter:drop-shadow(0 0 6px rgba(163,24,43,0.5));}50%{filter:drop-shadow(0 0 16px rgba(163,24,43,0.85));}}
+
+/* the vetaal shadow that crawls on scroll */
+.vetaal-shadow{position:absolute;right:6vw;bottom:0;width:min(38vw,420px);height:70vh;pointer-events:none;
+  opacity:0;transform:translateY(40px) scale(0.96);transition:opacity 1.4s ease, transform 1.4s ease;z-index:1;}
+.vetaal-shadow.crept{opacity:0.9;transform:translateY(0) scale(1);}
+.vetaal-shadow svg{width:100%;height:100%;overflow:visible;}
+
+/* ===== WALK CYCLE (SVG parts + CSS keyframes — no images needed) ===== */
+.vetaal-body{transform-box:fill-box;transform-origin:50% 50%;}
+.leg{transform-box:fill-box;transform-origin:50% 0%;} /* pivot at the hip, not the foot */
+.eye{transform-box:fill-box;transform-origin:50% 50%;}
+
+.vetaal-shadow.crept .vetaal-body{animation:walkBob 1.1s ease-in-out infinite;}
+.vetaal-shadow.crept .leg-l{animation:stepL 1.1s ease-in-out infinite;}
+.vetaal-shadow.crept .leg-r{animation:stepR 1.1s ease-in-out infinite;}
+.vetaal-shadow.crept .eye{animation:eyeBlink 4.4s ease-in-out infinite;}
+.vetaal-shadow.crept .eye-r{animation-delay:0.05s;}
+
+@keyframes walkBob{
+  0%,100%{transform:translateY(0) rotate(0deg);}
+  25%{transform:translateY(-3px) rotate(1.2deg);}
+  75%{transform:translateY(-3px) rotate(-1.2deg);}
+}
+@keyframes stepL{
+  0%,100%{transform:rotate(16deg);}
+  50%{transform:rotate(-14deg);}
+}
+@keyframes stepR{
+  0%,100%{transform:rotate(-14deg);}
+  50%{transform:rotate(16deg);}
+}
+@keyframes eyeBlink{
+  0%,92%,100%{transform:scaleY(1);opacity:1;}
+  96%{transform:scaleY(0.15);opacity:0.6;}
+}
+
+.court-line{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.15em;color:var(--ivory-dim);
+  margin-bottom:22px;position:relative;z-index:2;}
+.court-line .live{color:var(--ruby-bright);animation:blink 2.6s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.25;}}
+
+h1.brand{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(58px,12vw,148px);line-height:0.88;
+  letter-spacing:0.01em;position:relative;z-index:2;
+  background:linear-gradient(100deg,var(--gold) 0%,var(--gold-bright) 20%,#fff6d8 32%,var(--gold-bright) 44%,var(--gold) 60%,var(--gold-bright) 100%);
+  background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:shimmer 6s linear infinite;}
+@keyframes shimmer{0%{background-position:0% 50%;}100%{background-position:250% 50%;}}
+.brand-dev{font-family:'Noto Sans Devanagari',serif;font-weight:500;font-size:clamp(20px,3vw,32px);
+  color:var(--ruby-bright);letter-spacing:0.25em;display:block;margin-top:10px;position:relative;z-index:2;}
+.hero-tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(19px,2.3vw,28px);
+  color:var(--ivory-dim);max-width:540px;margin-top:34px;line-height:1.5;position:relative;z-index:2;}
+.hero-cta-row{margin-top:52px;display:flex;align-items:center;gap:26px;flex-wrap:wrap;position:relative;z-index:2;}
+.btn-primary{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;
+  background:var(--ruby);color:var(--ivory);border:1px solid var(--ruby-bright);padding:16px 30px;cursor:pointer;
+  transition:all 0.35s ease;position:relative;overflow:hidden;}
+.btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent,rgba(232,196,104,0.35),transparent);
+  transform:translateX(-120%);transition:transform 0.6s ease;}
+.btn-primary:hover::before{transform:translateX(120%);}
+.btn-primary:hover{background:var(--ruby-bright);box-shadow:0 0 24px rgba(163,24,43,0.5);}
+.scroll-hint{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ivory-dim);letter-spacing:0.1em;
+  display:flex;align-items:center;gap:10px;}
+.scroll-hint .line{width:1px;height:30px;background:linear-gradient(180deg,var(--gold),transparent);animation:scrollLine 1.8s infinite;}
+@keyframes scrollLine{0%{transform:scaleY(0);transform-origin:top;}50%{transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{transform:scaleY(0);transform-origin:bottom;}}
+
+/* ===== SYNOPSIS ===== */
+.synopsis{background:var(--void2);border-top:1px solid rgba(232,227,203,0.08);border-bottom:1px solid rgba(232,227,203,0.08);
+  position:relative;overflow:hidden;}
+.decree{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,3.3vw,40px);line-height:1.4;max-width:840px;color:var(--ivory);font-weight:400;}
+.decree em{font-style:italic;color:var(--gold-bright);}
+.decree strong{font-weight:700;color:var(--ruby-bright);}
+.riddle-count{margin-top:48px;display:flex;gap:60px;flex-wrap:wrap;}
+.stat{font-family:'JetBrains Mono',monospace;}
+.stat .num{font-size:32px;color:var(--gold-bright);display:block;}
+.stat .lbl{font-size:11px;color:var(--ivory-dim);letter-spacing:0.15em;text-transform:uppercase;margin-top:4px;display:block;}
+
+/* ===== CHARACTERS ===== */
+.characters{background:var(--void);}
+.char-title{font-family:'Cinzel',serif;font-weight:700;font-size:clamp(30px,4.2vw,50px);margin-bottom:60px;color:var(--ivory);}
+.char-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+@media (max-width:1100px){.char-grid{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:600px){.char-grid{grid-template-columns:1fr;}}
+.char-card{background:linear-gradient(180deg,#1a130a 0%,#100b06 100%);border:1px solid rgba(184,144,58,0.25);
+  position:relative;overflow:hidden;min-height:400px;display:flex;flex-direction:column;
+  transition:border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;}
+.char-card::before{content:'';position:absolute;inset:0;border:1px solid transparent;pointer-events:none;
+  background:linear-gradient(135deg,var(--gold-bright),transparent 30%,transparent 70%,var(--gold-bright)) border-box;
+  -webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+  opacity:0;transition:opacity 0.4s ease;}
+.char-card:hover{transform:translateY(-6px);box-shadow:0 12px 40px rgba(163,24,43,0.25);}
+.char-card:hover::before{opacity:1;}
+.char-portrait{height:200px;position:relative;display:flex;align-items:center;justify-content:center;
+  border-bottom:1px solid rgba(184,144,58,0.2);overflow:hidden;}
+.char-portrait::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 100% at 50% 15%,rgba(184,144,58,0.22),transparent 70%);}
+.jewel-icon{width:70px;height:70px;opacity:0.95;filter:drop-shadow(0 0 10px rgba(184,144,58,0.4));position:relative;z-index:2;
+  animation:iconIdle 3.6s ease-in-out infinite;transform-origin:50% 50%;}
+.char-card:nth-child(2n) .jewel-icon{animation-delay:-1.2s;}
+.char-card:nth-child(3n) .jewel-icon{animation-delay:-2.4s;}
+@keyframes iconIdle{
+  0%,100%{transform:translateY(0) rotate(0deg);}
+  50%{transform:translateY(-5px) rotate(3deg);}
+}
+.char-card:hover .jewel-icon{animation:iconWake 0.9s ease-in-out infinite;}
+@keyframes iconWake{
+  0%,100%{transform:translateY(0) rotate(0deg) scale(1);}
+  50%{transform:translateY(-9px) rotate(-6deg) scale(1.08);}
+}
+.char-body{padding:22px 24px;flex:1;display:flex;flex-direction:column;}
+.char-code{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ruby-bright);letter-spacing:0.14em;margin-bottom:8px;}
+.char-name{font-family:'Cinzel',serif;font-weight:700;font-size:20px;margin-bottom:4px;color:var(--gold-bright);}
+.char-role{font-family:'Noto Sans Devanagari',serif;color:var(--ivory-dim);font-size:13px;margin-bottom:16px;}
+.char-desc{font-size:13.5px;line-height:1.6;color:var(--ivory-dim);flex:1;}
+
+/* ===== CHAPTERS ===== */
+.chapters{background:var(--void2);border-top:1px solid rgba(232,227,203,0.08);}
+.chapter-rail{display:flex;gap:20px;overflow-x:auto;padding:20px 0 30px;scroll-snap-type:x mandatory;
+  -ms-overflow-style:none;scrollbar-width:none;}
+.chapter-rail::-webkit-scrollbar{display:none;}
+.chapter-card{flex:0 0 250px;scroll-snap-align:start;background:var(--void);border:1px solid rgba(184,144,58,0.2);
+  cursor:pointer;transition:transform 0.4s ease, border-color 0.4s ease;}
+.chapter-card:hover{transform:translateY(-8px) rotate(-1deg);border-color:var(--gold-bright);}
+.chapter-cover{height:330px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:20px;
+  border-bottom:1px solid rgba(184,144,58,0.15);}
+.chapter-cover::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(0,0,0,0.9) 100%);}
+.chapter-num{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font-size:15px;
+  color:var(--gold-bright);position:absolute;top:16px;left:16px;letter-spacing:0.1em;text-transform:uppercase;}
+.chapter-cover-title{position:relative;z-index:2;font-family:'Cinzel',serif;font-weight:700;font-size:20px;color:var(--ivory);}
+.chapter-info{padding:14px 20px;display:flex;justify-content:space-between;align-items:center;}
+.chapter-info span{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ivory-dim);letter-spacing:0.08em;text-transform:uppercase;}
+.chapter-arrow{color:var(--ruby-bright);font-size:14px;}
+
+/* ===== CTA ===== */
+.finale{background:var(--void);align-items:center;text-align:center;min-height:80vh;position:relative;overflow:hidden;}
+.finale-title{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(38px,5.8vw,76px);line-height:1.05;margin-bottom:22px;
+  background:linear-gradient(100deg,var(--gold),var(--gold-bright),#fff6d8,var(--gold-bright),var(--gold));
+  background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 6s linear infinite;}
+.finale-sub{font-family:'Noto Sans Devanagari',serif;color:var(--ruby-bright);font-size:15px;letter-spacing:0.1em;margin-bottom:44px;}
+.btn-board{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;
+  background:transparent;color:var(--ivory);border:1px solid var(--gold);padding:19px 46px;cursor:pointer;transition:all 0.4s ease;}
+.btn-board:hover{background:var(--ruby);border-color:var(--ruby-bright);letter-spacing:0.2em;box-shadow:0 0 30px rgba(163,24,43,0.45);}
+
+footer{padding:32px 10vw;display:flex;justify-content:space-between;align-items:center;
+  font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ivory-dim);
+  border-top:1px solid rgba(232,227,203,0.08);flex-wrap:wrap;gap:12px;position:relative;z-index:2;}
+</style>
+</head>
+<body>
+<div class="account-pill" id="accountPill"></div>
+
+<div class="auth-backdrop" id="authBackdrop">
+  <div class="auth-box">
+    <button class="auth-close" id="authClose">&times;</button>
+    <div class="auth-title" id="authTitle">Enter the Court</div>
+    <div class="auth-sub" id="authSub">Login to answer the Vetaal</div>
+
+    <div class="auth-field">
+      <label>Email</label>
+      <input type="email" id="authEmail" placeholder="you@example.com" />
+    </div>
+    <div class="auth-field">
+      <label>Password</label>
+      <input type="password" id="authPassword" placeholder="••••••••" />
+    </div>
+
+    <button class="auth-submit" id="authSubmit">Login</button>
+    <div class="auth-error" id="authError"></div>
+
+    <div class="auth-switch">
+      <span id="authSwitchText">New to the court?</span>
+      <a id="authSwitchLink">Register instead</a>
+    </div>
+  </div>
+</div>
+<div class="grain"></div>
+<div class="vignette"></div>
+<div class="dust-field" id="dustField"></div>
+
+<div class="diya-trail">
+  <div class="diya-track-bg"></div>
+  <div class="diyas" id="diyas"></div>
+</div>
+
+<!-- HERO -->
+<section class="hero section" id="s0">
+  <svg class="crown-motif" viewBox="0 0 100 60" fill="none">
+    <path d="M10 50 L20 15 L35 35 L50 8 L65 35 L80 15 L90 50 Z" stroke="#e8c468" stroke-width="2" fill="rgba(110,15,28,0.25)"/>
+    <circle cx="50" cy="20" r="5" fill="#a3182b" stroke="#e8c468" stroke-width="1.5"/>
+  </svg>
+  <div class="vetaal-shadow" id="vetaalShadow">
+    <svg viewBox="0 0 200 400" fill="none">
+      <defs>
+        <linearGradient id="shadowGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#a3182b" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="#100b06" stop-opacity="0.9"/>
+        </linearGradient>
+      </defs>
+      <!-- legs sit BEHIND the robe so the hem always covers the hip joint -->
+      <g class="leg leg-l"><path d="M92 300 q-4 40 -9 70 q-1 8 6 8 h12 q6 0 5 -8 l2 -70z" fill="#0a0704"/></g>
+      <g class="leg leg-r"><path d="M108 300 q4 40 9 70 q1 8 -6 8 h-12 q-6 0 -5 -8 l-2 -70z" fill="#0a0704"/></g>
+      <!-- torso + head + robe, animated as one rigid piece that bobs/sways -->
+      <g class="vetaal-body">
+        <path d="M100 20c-30 0-45 25-45 55 0 20 8 32 18 40-35 15-55 55-55 110v100c0 20 15 35 35 35h94c20 0 35-15 35-35V225c0-55-20-95-55-110 10-8 18-20 18-40 0-30-15-55-45-55z" fill="url(#shadowGrad)"/>
+        <circle class="eye eye-l" cx="82" cy="60" r="3.5" fill="#e8c468"/>
+        <circle class="eye eye-r" cx="118" cy="60" r="3.5" fill="#e8c468"/>
+      </g>
+    </svg>
+  </div>
+  <div class="court-line">RAJDARBAR · NIGHT OF THE CORONATION &nbsp;·&nbsp; <span class="live">● THE VETAAL RETURNS</span></div>
+  <h1 class="brand">VETAAL</h1>
+  <span class="brand-dev">वे ता ल</span>
+  <p class="hero-tagline">Every night it climbs onto his back and asks one question. Answer wrong, and dawn finds a body in the palace.</p>
+  <div class="hero-cta-row">
+    <button class="btn-primary">Read Riddle I — Free</button>
+    <div class="scroll-hint"><div class="line"></div>ENTER THE PALACE</div>
+  </div>
+</section>
+
+<!-- SYNOPSIS -->
+<section class="synopsis section" id="s1">
+  <div class="eyebrow reveal">Riddle I — The Empty Throne <span class="dev">प्रश्न</span></div>
+  <p class="decree reveal d1">
+    Crown Prince Aran is to be crowned within the week. But his father's pyre has not yet gone cold, and something
+    has begun to <strong>climb onto his back every night</strong> — a Vetaal, a spirit that wears the palace's dead like borrowed silk.
+  </p>
+  <p class="decree reveal d2" style="margin-top:22px;">
+    It never lets go until he answers its riddle. Answer wrong, and someone in the palace is dead by sunrise.
+    Answer right, and it only returns tomorrow with a <em>worse</em> question — one that gets closer to who really killed the old king.
+  </p>
+  <div class="riddle-count reveal d3">
+    <div class="stat"><span class="num">25</span><span class="lbl">Riddles to Survive</span></div>
+    <div class="stat"><span class="num">7</span><span class="lbl">Days to Coronation</span></div>
+    <div class="stat"><span class="num">1</span><span class="lbl">Throne, Contested</span></div>
+  </div>
+</section>
+
+<!-- CHARACTERS -->
+<section class="characters section" id="s2">
+  <div class="eyebrow reveal">Riddle II — Who Sits in Court <span class="dev">दरबार</span></div>
+  <h2 class="char-title reveal d1">The Court</h2>
+  <div class="char-grid"></div>
+</section>
+
+<!-- CHAPTERS -->
+<section class="chapters section" id="s3">
+  <div class="eyebrow reveal">Riddle III — What's Been Asked So Far <span class="dev">कथा</span></div>
+  <h2 class="char-title reveal d1">Chapters</h2>
+  <div class="chapter-rail reveal d2"> </div>
+</section>
+
+<!-- FINALE -->
+<section class="finale section" id="s4">
+  <div class="eyebrow reveal" style="justify-content:center;">Final Riddle — The Crown Waits <span class="dev">अंत</span></div>
+  <h2 class="finale-title reveal d1">It's climbing<br>onto your back too.</h2>
+  <p class="finale-sub reveal d2">उत्तर दो — answer, before it asks someone else.</p>
+  <div id="riddleContainer"></div>
+</section>
+
+<footer>
+  <span>VETAAL © A WEBTOON ORIGINAL</span>
+  <span>UPDATES MON / THU · A NEW RIDDLE EACH NIGHT</span>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
