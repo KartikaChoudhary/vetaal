@@ -1,0 +1,54 @@
+/* ===== AUTH MODAL ===== */
+.auth-backdrop{position:fixed;inset:0;background:rgba(16,11,6,0.85);z-index:999;display:none;
+  align-items:center;justify-content:center;backdrop-filter:blur(3px);}
+.auth-backdrop.open{display:flex;}
+.auth-box{background:linear-gradient(180deg,#1a130a 0%,#100b06 100%);border:1px solid rgba(184,144,58,0.4);
+  padding:40px 36px;width:min(90vw,380px);position:relative;}
+.auth-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--ivory-dim);
+  font-size:20px;cursor:pointer;font-family:'JetBrains Mono',monospace;}
+.auth-title{font-family:'Cinzel',serif;font-weight:700;font-size:24px;color:var(--gold-bright);margin-bottom:6px;}
+.auth-sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ivory-dim);letter-spacing:0.08em;
+  text-transform:uppercase;margin-bottom:26px;}
+.auth-field{margin-bottom:16px;}
+.auth-field label{display:block;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--ivory-dim);margin-bottom:6px;}
+.auth-field input{width:100%;background:var(--void);border:1px solid rgba(184,144,58,0.3);color:var(--ivory);
+  padding:11px 12px;font-family:'Mulish',sans-serif;font-size:14px;}
+.auth-field input:focus{outline:none;border-color:var(--gold-bright);}
+.auth-submit{width:100%;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.1em;
+  text-transform:uppercase;background:var(--ruby);color:var(--ivory);border:1px solid var(--ruby-bright);
+  padding:13px;cursor:pointer;margin-top:8px;transition:background 0.3s ease;}
+.auth-submit:hover{background:var(--ruby-bright);}
+.auth-submit:disabled{opacity:0.5;cursor:not-allowed;}
+.auth-switch{font-family:'Mulish',sans-serif;font-size:13px;color:var(--ivory-dim);text-align:center;margin-top:18px;}
+.auth-switch a{color:var(--gold-bright);cursor:pointer;text-decoration:underline;}
+.auth-error{color:var(--ruby-bright);font-size:12px;margin-top:10px;font-family:'JetBrains Mono',monospace;display:none;}
+.auth-error.show{display:block;}
+
+/* small account status pill, top-right corner */
+.account-pill{position:fixed;top:20px;right:20px;z-index:200;font-family:'JetBrains Mono',monospace;
+  font-size:11px;letter-spacing:0.06em;color:var(--ivory-dim);display:flex;align-items:center;gap:10px;}
+.account-pill button{background:transparent;border:1px solid rgba(184,144,58,0.4);color:var(--ivory);
+  padding:8px 16px;cursor:pointer;font-family:inherit;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;}
+.account-pill button:hover{border-color:var(--gold-bright);color:var(--gold-bright);}
+
+/* ===== RIDDLE QUIZ (replaces the finale CTA button) ===== */
+.riddle-box{max-width:480px;margin:0 auto;text-align:left;background:linear-gradient(180deg,#1a130a,#100b06);
+  border:1px solid rgba(184,144,58,0.3);padding:32px;position:relative;z-index:2;}
+.riddle-question{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;color:var(--ivory);
+  line-height:1.5;margin-bottom:20px;}
+.riddle-input-row{display:flex;gap:10px;}
+.riddle-input-row input{flex:1;background:var(--void);border:1px solid rgba(184,144,58,0.3);color:var(--ivory);
+  padding:12px;font-family:'Mulish',sans-serif;font-size:14px;}
+.riddle-input-row input:focus{outline:none;border-color:var(--gold-bright);}
+.riddle-submit{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;
+  background:var(--ruby);color:var(--ivory);border:1px solid var(--ruby-bright);padding:0 22px;cursor:pointer;}
+.riddle-submit:hover{background:var(--ruby-bright);}
+.riddle-hint{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ivory-dim);margin-top:12px;cursor:pointer;
+  text-decoration:underline;display:inline-block;}
+.riddle-result{margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:13px;padding:12px;display:none;}
+.riddle-result.show{display:block;}
+.riddle-result.correct{background:rgba(13,58,52,0.4);border:1px solid var(--emerald);color:#7fd9c4;}
+.riddle-result.wrong{background:rgba(110,15,28,0.25);border:1px solid var(--ruby);color:#e89aa3;}
+.riddle-locked{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ivory-dim);text-align:center;}
+.riddle-locked a{color:var(--gold-bright);cursor:pointer;text-decoration:underline;}
